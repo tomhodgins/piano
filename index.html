@@ -132,9 +132,7 @@
     }
     function release(e){
       this.className = ''
-      if (e.touches.length < 2){
-        gain.gain.value = 0
-      }
+      gain.gain.value = 0
     }
     var synth = new (window.AudioContext || window.webkitAudioContext)(),
         oscillator = synth.createOscillator(),
