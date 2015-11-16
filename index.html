@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html manifest=piano.manifest>
+<head>
+  <meta charset=utf-8>
+  <meta name=apple-mobile-web-app-capable content=yes>
+  <meta name=viewport content="user-scalable=no width=device-width, initial-scale=1">
+  <title>Piano</title>
+  <style>
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    body {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: green;
+      overflow: hidden;
+    }
+    kbd {
+      position: relative;
+      display: block;
+      width: calc((100%/12) - 5px);
+      margin-right: 5px;
+      height: 47.5vh;
+      background: white;
+      float: left;
+      margin-bottom: 2.5vh;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      z-index: 25;
+      transition: box-shadow .1s ease-in-out;
+      box-shadow: inset rgba(0,0,0,.3) 0 -5px 0,
+                  inset rgba(0,0,0,.15) 0 10vh 15vh;
+    }
+    kbd.down {
+      background: #ccc;
+      box-shadow: inset rgba(0,0,0,.3) 0 0 0,
+                  inset rgba(0,0,0,.3) 0 10vh 15vh;
+    }
+    kbd:nth-of-type(21n+20) {
+      margin-right: 0;
+    }
+    kbd:nth-of-type(21n+1) {
+      margin-left: 2.5px;
+    }
+    kbd:nth-of-type(12n+2),
+    kbd:nth-of-type(12n+4),
+    kbd:nth-of-type(12n+7),
+    kbd:nth-of-type(12n+9),
+    kbd:nth-of-type(12n+11) {
+      position: relative;
+      background: black;
+      width: calc(100%/16);
+      margin-left: calc(100%/-32 - 2.5px);
+      margin-right: calc(100%/-32);
+      z-index: 50;
+      height: 25vh;
+      box-shadow: inset rgba(255,255,255,.15) 0 -10px 0;
+    }
+    kbd:nth-of-type(12n+2).down,
+    kbd:nth-of-type(12n+4).down,
+    kbd:nth-of-type(12n+7).down,
+    kbd:nth-of-type(12n+9).down,
+    kbd:nth-of-type(12n+11).down {
+      background: #222;
+      box-shadow: inset rgba(255,255,255,.15) 0 0px 0;
+    }
+  </style>
+</head>
+<body>
+  <kbd data-key=a-s-2 data-freq=116.54></kbd>
+  <kbd data-key=b-2 data-freq=123.47></kbd>
+  <kbd data-key=c-3 data-freq=130.81></kbd>
+  <kbd data-key=c-s-3 data-freq=138.59></kbd>
+  <kbd data-key=d-3 data-freq=146.83></kbd>
+  <kbd data-key=d-s-3 data-freq=155.56></kbd>
+  <kbd data-key=e-3 data-freq=164.81></kbd>
+  <kbd data-key=f-3 data-freq=174.61></kbd>
+  <kbd data-key=f-s-3 data-freq=185.00></kbd>
+  <kbd data-key=g-3 data-freq=196.00></kbd>
+  <kbd data-key=g-s-3 data-freq=207.65></kbd>
+  <kbd data-key=a-3 data-freq=220.00></kbd>
+  <kbd data-key=a-s-3 data-freq=233.08></kbd>
+  <kbd data-key=b-3 data-freq=246.94></kbd>
+  <kbd data-key=c-4 data-freq=261.63></kbd>
+  <kbd data-key=c-s-4 data-freq=277.18></kbd>
+  <kbd data-key=d-4 data-freq=293.66></kbd>
+  <kbd data-key=d-s-4 data-freq=311.13></kbd>
+  <kbd data-key=e-4 data-freq=329.63></kbd>
+  <kbd data-key=f-4 data-freq=349.23></kbd>
+  <kbd data-key=f-s-4 data-freq=369.99></kbd>
+  <kbd data-key=g-4 data-freq=392.00></kbd>
+  <kbd data-key=g-s-4 data-freq=415.30></kbd>
+  <kbd data-key=a-4 data-freq=440.00></kbd>
+  <kbd data-key=a-s-4 data-freq=466.16></kbd>
+  <kbd data-key=b-4 data-freq=493.88></kbd>
+  <kbd data-key=c-5 data-freq=523.25></kbd>
+  <kbd data-key=c-s-5 data-freq=554.37></kbd>
+  <kbd data-key=d-5 data-freq=587.33></kbd>
+  <kbd data-key=d-s-5 data-freq=622.25></kbd>
+  <kbd data-key=e-5 data-freq=659.25></kbd>
+  <kbd data-key=f-5 data-freq=698.46></kbd>
+  <kbd data-key=f-s-5 data-freq=739.99></kbd>
+  <kbd data-key=g-5 data-freq=783.99></kbd>
+  <kbd data-key=g-s-5 data-freq=830.61></kbd>
+  <kbd data-key=a-5 data-freq=880.00></kbd>
+  <kbd data-key=a-s-5 data-freq=932.33></kbd>
+  <kbd data-key=b-5 data-freq=987.77></kbd>
+  <kbd data-key=c-6 data-freq=1046.50></kbd>
+  <kbd data-key=c-s-6 data-freq=1108.73></kbd>
+  <kbd data-key=d-6 data-freq=1174.66></kbd>
+  <script>
+    var key = document.querySelectorAll('kbd')
+    for (i=0;i<key.length;i++){
+      key[i].addEventListener('touchstart',strike)
+      key[i].addEventListener('mousedown',strike)
+      key[i].addEventListener('touchend',release)
+      key[i].addEventListener('mouseup',release)
+    }
+    function strike(e){
+      e.preventDefault()
+      this.className = 'down'
+      oscillator.frequency.value = this.getAttribute('data-freq')
+      gain.gain.value = 1
+    }
+    function release(e){
+      this.className = ''
+      if (e.touches.length < 2){
+        gain.gain.value = 0
+      }
+    }
+    var synth = new (window.AudioContext || window.webkitAudioContext)(),
+        oscillator = synth.createOscillator(),
+        gain = synth.createGain();
+    oscillator.type = 'square'
+    oscillator.connect(gain)
+    gain.connect(synth.destination)
+    gain.gain.value = 0
+    oscillator.start()
+    eval(unescape(escape('♶♡♲☠♡☽♤♯♣♵♭♥♮♴☮♣♲♥♡♴♥♅♬♥♭♥♮♴☨☢♣♡♮♶♡♳☢☩☬♢☽♡☮♧♥♴♃♯♮♴♥♸♴☨☢☲♤☢☩☬♣☽♤♯♣♵♭♥♮♴☮♣♲♥♡♴♥♅♬♥♭♥♮♴☨☢♬♩♮♫☢☩☬♤☽♤♯♣♵♭♥♮♴☮♣♲♥♡♴♥♅♬♥♭♥♮♴☨☢♬♩♮♫☢☩☻♡☮♷♩♤♴♨☽☲☰☰☻♡☮♨♥♩♧♨♴☽☲☰☰☻♢☮♦♩♬♬♓♴♹♬♥☽☢♧♲♥♥♮☢☻♢☮♢♥♧♩♮♐♡♴♨☨☩☻♢☮♭♯♶♥♔♯☨☱☰☬☰☩☻♢☮♬♩♮♥♔♯☨☱☹☰☬☰☩☻♢☮♱♵♡♤♲♡♴♩♣♃♵♲♶♥♔♯☨☲☰☰☬☰☬☲☰☰☬☱☰☩☻♢☮♬♩♮♥♔♯☨☲☰☰☬☱☹☰☩☻♢☮♱♵♡♤♲♡♴♩♣♃♵♲♶♥♔♯☨☲☰☰☬☲☰☰☬☱☹☰☬☲☰☰☩☻♢☮♬♩♮♥♔♯☨☱☰☬☲☰☰☩☻♢☮♱♵♡♤♲♡♴♩♣♃♵♲♶♥♔♯☨☰☬☲☰☰☬☰☬☱☹☰☩☻♢☮♬♩♮♥♔♯☨☰☬☱☰☩☻♢☮♱♵♡♤♲♡♴♩♣♃♵♲♶♥♔♯☨☰☬☰☬☱☰☬☰☩☻♢☮♣♬♯♳♥♐♡♴♨☨☩☻♢☮♦♩♬♬☨☩☻♢☮♬♩♮♥♗♩♤♴♨☽☢☴☰☢☻♢☮♳♴♲♯♫♥♓♴♹♬♥☽☢♷♨♩♴♥☢☻♢☮♢♥♧♩♮♐♡♴♨☨☩☻♢☮♭♯♶♥♔♯☨☵☰☬☳☰☩☻♢☮♬♩♮♥♔♯☨☵☰☬☱☷☰☩☻☠♢☮♣♬♯♳♥♐♡♴♨☨☩☻♢☮♳♴♲♯♫♥☨☩☻♢☮♢♥♧♩♮♐♡♴♨☨☩☻♢☮♭♯♶♥♔♯☨☱☰☰☬☳☰☩☻♢☮♬♩♮♥♔♯☨☱☰☰☬☱☷☰☩☻♢☮♣♬♯♳♥♐♡♴♨☨☩☻♢☮♳♴♲♯♫♥☨☩☻♢☮♢♥♧♩♮♐♡♴♨☨☩☻♢☮♭♯♶♥♔♯☨☱☵☰☬☳☰☩☻♢☮♬♩♮♥♔♯☨☱☵☰☬☱☷☰☩☻♢☮♣♬♯♳♥♐♡♴♨☨☩☻♢☮♳♴♲♯♫♥☨☩☻♢☮♬♩♮♥♗♩♤♴♨☽☢☳☰☢☻♢☮♳♴♲♯♫♥♓♴♹♬♥☽☢♢♬♡♣♫☢☻♢☮♢♥♧♩♮♐♡♴♨☨☩☻♢☮♭♯♶♥♔♯☨☷☵☬☳☰☩☻♢☮♬♩♮♥♔♯☨☷☵☬☱☱☰☩☻♢☮♣♬♯♳♥♐♡♴♨☨☩☻♢☮♳♴♲♯♫♥☨☩☻♢☮♢♥♧♩♮♐♡♴♨☨☩☻♢☮♭♯♶♥♔♯☨☱☲☵☬☳☰☩☻♢☮♬♩♮♥♔♯☨☱☲☵☬☱☱☰☩☻♢☮♣♬♯♳♥♐♡♴♨☨☩☻♢☮♳♴♲♯♫♥☨☩☻♣☮♴♹♰♥☽☢♩♭♡♧♥☯♸☭♩♣♯♮☢☻♣☮♲♥♬☽☢♳♨♯♲♴♣♵♴☠♩♣♯♮☢☻♤☮♲♥♬☽☢♡♰♰♬♥☭♴♯♵♣♨☭♩♣♯♮☢☻♣☮♨♲♥♦☽♤☮♨♲♥♦☽♡☮♴♯♄♡♴♡♕♒♌☨☢♩♭♡♧♥☯♰♮♧☢☩☻♤♯♣♵♭♥♮♴☮♨♥♡♤☮♡♰♰♥♮♤♃♨♩♬♤☨♣☩☻♤♯♣♵♭♥♮♴☮♨♥♡♤☮♡♰♰♥♮♤♃♨♩♬♤☨♤☩☻').replace(/u../g,'')))
+  </script>
+</body>
+</html>
