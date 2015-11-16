@@ -134,7 +134,7 @@
       this.className = ''
       gain.gain.value = 0
     }
-    var synth = new (window.AudioContext || window.webkitAudioContext)(),
+    var synth = new (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext)(),
         oscillator = synth.createOscillator(),
         gain = synth.createGain();
     oscillator.type = 'square'
